@@ -55,7 +55,7 @@ if ($result->num_rows==0) {
                                     <td><?php echo $row["name"]; ?></td>
                                     <td><?php echo $row["description"]; ?></td>
                                     <td>
-                                        <a href="project-view-task.php?id=<?=$row['id']; ?>" class="btn btn-info btn-sm">Tasks</a>
+                                        <a href="project-view-tasks.php?id=<?=$row['id']; ?>" class="btn btn-info btn-sm">Tasks</a>
                                         <a href="project-update.php?id=<?= $row['id']; ?>" class="btn btn-success btn-sm">Edit</a>
                                         <a href="" class="btn btn-danger btn-sm">Delete</a>
                                     </td>

@@ -17,6 +17,11 @@ class Project {
         return $conn->query($query);
     }
 
+    public static function findNameById (mysqli $conn, $id) {
+        $query = "SELECT name FROM project WHERE id='$id'";
+        return $conn->query($query);
+    }
+
     public static function findById($id, mysqli $conn)
     {
         $query = "SELECT * FROM project WHERE id=$id";

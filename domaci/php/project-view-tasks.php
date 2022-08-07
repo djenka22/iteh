@@ -1,17 +1,22 @@
 <?php
 session_start();
 require "dbConfig.php";
+require "model/task.php";
 require "model/project.php";
 
-$result = Project::findAll($conn);
 
+if (isset($_GET['id'])) {
+    $projectId = mysqli_real_escape_string($conn, $_GET['id']);
+    $result = Task::findByProject($projectId, $conn);
+    $result1 = Project::findNameById($conn, $_GET['id']);
+    $name = $result1->fetch_array()[0];
+}
 if (!$result) {
     echo "Error!";
     die();
 }
-if ($result->num_rows==0) {
-    echo "No projects to display";
-} else {
+
+
 
 ?>
 
@@ -20,7 +25,7 @@ if ($result->num_rows==0) {
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Projects</title>
+    <title>Tasks</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
   </head>
 
@@ -28,13 +33,16 @@ if ($result->num_rows==0) {
   <body>
  
     <div class="container mt-5">
-    
+    <?php include('message.php'); ?>
+
         <div class="row">
             <div class="column-md-12">
                 <div class="card">
                     <div class="card-header">
-                         <h4>Project details
-                            <a href="project-create.php" class="btn btn-primary float-end"> Create project </a>
+                         <h4>Task details
+                            <a href="task-create.php?id=<?= $projectId;?>" class="btn btn-primary float-end"> Create task </a> <p></p>
+                            <a href="index.php" class="btn btn-danger float-end">Back</a> 
+
                          </h4>
                     </div>
                     <div class="card-body">
@@ -44,6 +52,7 @@ if ($result->num_rows==0) {
                                     <th>ID</th>
                                     <th>Name</th>
                                     <th>Description</th>
+                                    <th>Project Name</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -54,16 +63,17 @@ if ($result->num_rows==0) {
                                     <td><?php echo $row["id"]; ?></td>
                                     <td><?php echo $row["name"]; ?></td>
                                     <td><?php echo $row["description"]; ?></td>
+                                    <td><?php echo $name ?></td>
+
                                     <td>
-                                        <a href="project-view-tasks.php?id=<?=$row['id']; ?>" class="btn btn-info btn-sm">Tasks</a>
-                                        <a href="project-update.php?id=<?= $row['id']; ?>" class="btn btn-success btn-sm">Edit</a>
+                                        <a href="task-update.php?id=<?= $row['id']; ?>&project=<?=$projectId?>" class="btn btn-success btn-sm">Edit</a>
                                         <a href="" class="btn btn-danger btn-sm">Delete</a>
                                     </td>
                                     
                                 </tr>
                             <?php 
                             endwhile;
-                            } //end of else
+                        
                             ?>
                             </tbody>
                         </table>
