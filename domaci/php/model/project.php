@@ -20,7 +20,7 @@ class Project {
     public static function findById($id, mysqli $conn)
     {
         $query = "SELECT * FROM project WHERE id=$id";
-        $array = array();
+       /* $array = array();
         $result = $conn->query($query);
         if($result){
             while($red = $result->fetch_array()) {
@@ -28,7 +28,8 @@ class Project {
             }
         }
         
-        return $array;
+        return $array;*/
+        return $conn->query($query);
         
     }
     
@@ -45,7 +46,7 @@ class Project {
     }
 
     public static function update(Project $project, mysqli $conn){
-        $query = "UPDATE project set name ='$project->name', description='$project->description'";
+        $query = "UPDATE project set name ='$project->name', description='$project->description' WHERE id='$project->id'";
         return $conn->query($query);
     }
 
