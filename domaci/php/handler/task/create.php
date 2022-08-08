@@ -10,7 +10,7 @@ if(isset($_POST['name']) && isset($_POST['description']) && isset($_POST['id']))
         $status = Task::create($task, $conn);
         if ($status){
             $_SESSION['message'] = "Task created successfully";
-            header("Location: ../../task.create.php");
+            header("Location: ../../task-create.php?id=".$_POST['id']);
             exit(0);
         }else{
             $_SESSION['message'] = "Task is not created";

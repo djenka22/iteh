@@ -9,10 +9,6 @@ if (!$result) {
     echo "Error!";
     die();
 }
-if ($result->num_rows==0) {
-    echo "No projects to display";
-} else {
-
 ?>
 
 <!doctype html>
@@ -28,7 +24,8 @@ if ($result->num_rows==0) {
   <body>
  
     <div class="container mt-5">
-    
+     <?php include('message.php'); ?>
+
         <div class="row">
             <div class="column-md-12">
                 <div class="card">
@@ -57,13 +54,15 @@ if ($result->num_rows==0) {
                                     <td>
                                         <a href="project-view-tasks.php?id=<?=$row['id']; ?>" class="btn btn-info btn-sm">Tasks</a>
                                         <a href="project-update.php?id=<?= $row['id']; ?>" class="btn btn-success btn-sm">Edit</a>
-                                        <a href="" class="btn btn-danger btn-sm">Delete</a>
+                                        <form action="handler/project/delete.php" id="deleteProject" method="POST" class="d-inline">
+                                            <input type="hidden" name="id" value="<?=$row["id"]?>">
+                                            <button type="submit" id="deleteProject" name="delete_project" class="btn btn-danger btn-sm">Delete</button>
+                                        </form>
                                     </td>
                                     
                                 </tr>
                             <?php 
                             endwhile;
-                            } //end of else
                             ?>
                             </tbody>
                         </table>
@@ -76,8 +75,9 @@ if ($result->num_rows==0) {
 
 
 
-
-
+                          
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
-  </body>
+    <script src="js/main.js"></script>
+</body>
 </html>
