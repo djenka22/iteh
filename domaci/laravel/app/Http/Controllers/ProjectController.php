@@ -6,6 +6,8 @@ use App\Models\Project;
 use Illuminate\Http\Request;
 use App\Http\Resources\ProjectCollection;
 use App\Http\Resources\ProjectResource;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 
 class ProjectController extends Controller
@@ -40,7 +42,26 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:2000',
+            'priority' => 'required|integer|between:1,10',
+            'client' => 'required|string|max:255',
+            'user_id' => 'required'
+        ]);
+
+        if ($validator->fails())
+            return response()->json($validator->errors());
+
+        $project = Project::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'priority' => $request->priority,
+            'client' => $request->client,
+            'user_id' => Auth::user()->id
+        ]);
+
+        return response()->json(['Project is created successfully.', new ProjectResource($project)]);
     }
 
     /**

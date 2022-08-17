@@ -6,6 +6,8 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\API\AuthController;
+
 
 
 /*
@@ -23,7 +25,24 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::resource('projects', ProjectController::class)->only(['index','store','show','destroy']);
-Route::resource('tasks', TaskController::class)->only(['index','store','show','destroy']);
-Route::resource('categories', CategoryController::class)->only(['index','store','show','destroy']);
-Route::resource('users', UserController::class)->only(['index','store','show','destroy']);
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::get('/profile', function (Request $request) {
+        return auth()->user();
+    });
+
+    Route::resource('projects', ProjectController::class)->only(['store','destroy']);
+    Route::resource('users', UserController::class)->only(['store','destroy']);
+    Route::resource('categories', CategoryController::class)->only(['store','destroy']);
+    Route::resource('tasks', TaskController::class)->only(['store','destroy']);
+
+
+    Route::post('/logout', [AuthController::class, 'logout']);
+});
+
+Route::resource('projects', ProjectController::class)->only(['index','show']);
+Route::resource('tasks', TaskController::class)->only(['index','show']);
+Route::resource('categories', CategoryController::class)->only(['index','show']);
+Route::resource('users', UserController::class)->only(['index','show']);
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+

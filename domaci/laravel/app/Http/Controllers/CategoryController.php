@@ -6,6 +6,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Resources\CategoryCollection;
 use App\Http\Resources\CategoryResource;
+use Illuminate\Support\Facades\Validator;
 
 
 
@@ -40,7 +41,20 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:2000'
+        ]);
+
+        if ($validator->fails())
+            return response()->json($validator->errors());
+
+        $category = Category::create([
+            'name' => $request->name,
+            'description' => $request->description
+        ]);
+
+        return response()->json(['Category is created successfully.', new CategoryResource($category)]);
     }
 
     /**

@@ -6,6 +6,8 @@ use App\Models\Task;
 use Illuminate\Http\Request;
 use App\Http\Resources\TaskCollection;
 use App\Http\Resources\TaskResource;
+use Illuminate\Support\Facades\Validator;
+
 
 
 
@@ -40,7 +42,26 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:2000',
+            'priority' => 'required|integer|between:1,10',
+            'category_id' => 'required',
+            'project_id' => 'required'
+        ]);
+
+        if ($validator->fails())
+            return response()->json($validator->errors());
+
+        $task = Task::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'priority' => $request->priority,
+            'category_id' => $request->category_id,
+            'project_id' => $request->project_id
+        ]);
+
+        return response()->json(['Task is created successfully.', new TaskResource($task)]);
     }
 
     /**
